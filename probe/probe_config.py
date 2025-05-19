@@ -17,6 +17,7 @@ CONCEPT_LABELS = {
         (3, "time_signature_subdivision"),
     ],
     "tempos": [(161, "bpm")],
+    "keys": [12,"pitch")],
 }
 
 
@@ -90,6 +91,21 @@ SWEEP_CONFIGS = {
         },
         "wandb_project_name": "music-theory-musicgen",
     },
+    "crepe": {
+    "wandb_sweep_parameters": {
+        "method": "grid",
+        "metric": {"goal": "minimize", "name": "primary_eval_metric"},
+        "parameters": {
+            "model_type": {"values": ["CREPE"]},
+            "model_size": {"values": ["L"]},  
+            "model_layer": {"values": [0]}, 
+            "concept": {"values": list(CONCEPT_LABELS.keys())},
+        },
+    },
+    "wandb_project_name": "music-theory-crepe",
+},
+
+        
 }
 
 
