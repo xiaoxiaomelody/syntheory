@@ -9,6 +9,7 @@ models:
   - MELSPEC
   - MFCC
   - CHROMA
+  - CREPE 
 
 # Concepts to extract representations for
 concepts:
@@ -19,6 +20,7 @@ concepts:
   - scales
   - intervals
   - chord_progressions
+  - keys
 
 # Global settings
 settings:
