@@ -25,6 +25,7 @@ class Model(Enum):
     CHROMA = 7
     MFCC = 8
     HANDCRAFT = 9
+    CREPE = 10
 
     def to_string(self) -> str:
         return self.name
@@ -37,7 +38,7 @@ class Model(Enum):
             return 24
         elif self in {Model.MUSICGEN_DECODER_LM_M, Model.MUSICGEN_DECODER_LM_L}:
             return 48
-        elif self in {Model.MUSICGEN_AUDIO_ENCODER, Model.MELSPEC, Model.CHROMA, Model.MFCC, Model.HANDCRAFT}:
+        elif self in {Model.CREPE, Model.MUSICGEN_AUDIO_ENCODER, Model.MELSPEC, Model.CHROMA, Model.MFCC, Model.HANDCRAFT}:
             return None
         else:
             raise ValueError(f"Invalid model: {self}")
@@ -123,7 +124,7 @@ def audio_file_to_embedding_np_array(
         jukemirlib.lib.empty_cache()
 
     # Handcrafted features
-    elif model_type in {Model.MELSPEC, Model.CHROMA, Model.MFCC, Model.HANDCRAFT}:
+    elif model_type in {Model.CREPE, Model.MELSPEC, Model.CHROMA, Model.MFCC, Model.HANDCRAFT}:
         audio = load_audio(audio_file, 22050, DURATION_IN_SEC)
         if model_type == Model.HANDCRAFT:
             embedding = np.concatenate([concat_features(melspectrogram(audio, sr=22050)),
@@ -136,7 +137,9 @@ def audio_file_to_embedding_np_array(
                 features = chroma_cqt(audio, sr=22050)
             elif model_type == Model.MFCC:
                 features = mfcc(y=audio, sr=22050)
-            
+                audio_float32 = audio.astype(np.float32)
+                _, _, _, activation = crepe.predict(audio_float32, 22050, viterbi=True)
+                features = activation
             # concatentate mean and std across time of features & their 1st and 2nd order differences
             embedding = concat_features(features)
         
