@@ -2,6 +2,9 @@ from typing import Union, Optional
 from enum import Enum
 from pathlib import Path
 
+#add my baseline importation
+import soundfile as sf
+import crepe
 import numpy as np
 
 import librosa as lr
